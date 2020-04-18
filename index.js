@@ -31,20 +31,21 @@ svgContainer
 fetch(url)
   .then((response) => response.json())
   .then((dataset) => {
-    const yScale = d3
-      .scaleBand()
-      .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-      .rangeRound([0, height]);
+    const yScale = d3.scale.ordinal().domain([0, 1, 3, 11]).range([0, 100]);
 
     /*const xScale = d3
       .ordinal()
       .domain([dataset.monthlyVariance.map((d) => d.year)])
       .range([padding, width]);*/
 
-    const yAxis = d3.axisLeft(yScale).tickValues(yScale.domain());
+    const yAxis = d3.axisLeft(yScale);
     //const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y"));
 
-    svgContainer.append("g").attr("id", "y-axis").call(yAxis);
+    svgContainer
+      .append("g")
+      .attr("id", "y-axis")
+      .attr("transform", "translate(200, 200)")
+      .call(yAxis);
 
     /*svgContainer
       .selectAll("rect")
