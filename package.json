@@ -2,7 +2,7 @@
   "name": "d3-heat-map",
   "version": "1.0.0",
   "description": "FCC D3 Heat Map Project",
-  "main": "index.html",
+  "main": "index.js",
   "directories": {
     "doc": "docs"
   },
@@ -21,5 +21,9 @@
   "homepage": "https://github.com/HelenHMaher/D3-Heat-Map#readme",
   "dependencies": {
     "d3-scale": "^3.2.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   }
 }
