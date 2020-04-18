@@ -11,13 +11,46 @@ const svgContainer = d3
   .attr("width", width)
   .attr("height", height);
 
+svgContainer
+  .append("text")
+  .text("Month")
+  .attr("transform", "rotate(-90 15 200)")
+  .attr("x", 15)
+  .attr("y", 200)
+  .attr("class", "axisTitle")
+  .attr("id", "yAxisTitle");
+
+svgContainer
+  .append("text")
+  .text("Year")
+  .attr("x", 300)
+  .attr("y", height - padding)
+  .attr("class", "axisTitle")
+  .attr("id", "xAxisTitle");
+
 fetch(url)
   .then((response) => response.json())
   .then((dataset) => {
-    console.log(dataset);
-    svgContainer
-      .append("text")
-      .attr("x", 100)
-      .attr("y", 100)
-      .text(JSON.stringify(dataset));
+    const yScale = d3
+      .scaleBand()
+      .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      .rangeRound([0, height]);
+
+    /*const xScale = d3
+      .ordinal()
+      .domain([dataset.monthlyVariance.map((d) => d.year)])
+      .range([padding, width]);*/
+
+    const yAxis = d3.axisLeft(yScale).tickValues(yScale.domain());
+    //const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y"));
+
+    svgContainer.append("g").attr("id", "y-axis").call(yAxis);
+
+    /*svgContainer
+      .selectAll("rect")
+      .data(dataset.monthlyVariance)
+      .enter()
+      .append("rect")
+      .attr("x", (d, i) => xScale(d.Month - 1))
+      .attr("y", (d, i) => yScale(d.Year));*/
   });
