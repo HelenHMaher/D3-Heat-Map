@@ -29,6 +29,16 @@ svgContainer
   .attr("class", "axisTitle")
   .attr("id", "xAxisTitle");
 
+const legendColors = [
+  "--negThree",
+  "--negTwo",
+  "--negOne",
+  "--zero",
+  "--one",
+  "--two",
+  "--three",
+];
+
 fetch(url)
   .then((response) => response.json())
   .then((dataset) => {
@@ -88,16 +98,26 @@ fetch(url)
     const tempArray = varianceArray.map((d, i) => d + dataset.baseTemperature);
 
     const legendScale = d3
-      .scaleLinear()
+      .scaleThreshold()
       .domain(() => {
         const step =
           d3.max(tempArray) - d3.min(tempArray) / legendColors.length;
+        const array = [];
+        for (let i = 1; i < legendColors.length; i++) {
+          array.push(d3.min(tempArray + i * step));
+        }
+        return array;
       })
       .range(legendColors);
+    const legendXScale = d3
+      .scaleLinear()
+      .domain([d3.min(tempArray), d3.max(tempArray)])
+      .range([paddingLeft, 300]);
 
     const legendAxis = d3
-      .axisBottom(legendScale)
-      .tickFormat((d) => d3.format(".2f")(d));
+      .axisBottom(legendXScale)
+      .tickValues(legendScale.domain())
+      .tickFormat(d3.format(".2f"));
 
     svgContainer
       .append("g")
