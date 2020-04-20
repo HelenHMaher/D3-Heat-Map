@@ -3,7 +3,7 @@ const url =
 
 const width = 2000,
   height = 500,
-  padding = 60;
+  padding = 80;
 
 const svgContainer = d3
   .select(".visHolder")
@@ -32,16 +32,23 @@ fetch(url)
   .then((response) => response.json())
   .then((dataset) => {
     const yScale = d3
-      .scaleOrdinal()
-      .domain([0, 1, 3, 11])
-      .rangeBands([padding, height - padding]);
+      .scaleBand()
+      .domain(
+        dataset.monthlyVariance.map((d) => {
+          return new Date(0, d.month - 1);
+        })
+      )
+      .rangeRound([height - padding, padding]);
 
     /*const xScale = d3
       .ordinal()
       .domain([dataset.monthlyVariance.map((d) => d.year)])
       .range([padding, width]);*/
 
-    const yAxis = d3.axisLeft(yScale).tickValues(yScale.domain());
+    const yAxis = d3
+      .axisLeft(yScale)
+      .tickValues(yScale.domain())
+      .tickFormat((d) => d3.timeFormat("%B")(d));
     //const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y"));
 
     svgContainer
