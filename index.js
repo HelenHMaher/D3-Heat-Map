@@ -119,7 +119,7 @@ fetch(url)
     const legendAxis = d3
       .axisBottom(legendXScale)
       .tickValues(thresholdArray)
-      .tickFormat(d3.format(".2f"));
+      .tickFormat(d3.format(".1f"));
 
     const legend = svgContainer
       .append("g")
@@ -143,7 +143,7 @@ fetch(url)
     legend
       .append("g")
       .selectAll("rect")
-      .data([d3.min(tempArray), ...thresholdArray])
+      .data([d3.min(tempArray), ...thresholdArray].map((d) => d + 0.03))
       .enter()
       .append("rect")
       .attr("x", (d, i) => {
@@ -151,7 +151,10 @@ fetch(url)
       })
       .attr("data-set", (d, i) => d)
       .attr("y", -35)
-      .attr("width", (d) => legendXScale(d + step) - legendXScale(d))
+      .attr(
+        "width",
+        legendXScale(thresholdArray[1]) - legendXScale(thresholdArray[0])
+      )
       .attr("height", 35)
       .style("fill", (d, i) => {
         return "var(" + legendColors[i] + ")";
