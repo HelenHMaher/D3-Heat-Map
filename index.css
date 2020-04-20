@@ -2,7 +2,7 @@
 
 :root {
   --negThree: #350042;
-  --negtwo: #342871;
+  --negTwo: #342871;
   --negOne: #26547b;
   --zero: #1f7f79;
   --one: #30ac67;
@@ -32,4 +32,8 @@ svg {
 .heading {
   text-align: left;
   width: 1840px;
+}
+
+.legendCell {
+  background: green;
 }

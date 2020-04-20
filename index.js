@@ -96,19 +96,21 @@ fetch(url)
 
     const varianceArray = dataset.monthlyVariance.map((d) => d.variance);
     const tempArray = varianceArray.map((d, i) => d + dataset.baseTemperature);
+    const step = (d3.max(tempArray) - d3.min(tempArray)) / legendColors.length;
+    const thresholdArray = [];
 
-    const legendScale = d3
+    const stepThreshold = () => {
+      for (let i = 1; i < legendColors.length; i++) {
+        thresholdArray.push(d3.min(tempArray) + i * step);
+      }
+    };
+    stepThreshold();
+
+    const thresholdScale = d3
       .scaleThreshold()
-      .domain(() => {
-        const step =
-          d3.max(tempArray) - d3.min(tempArray) / legendColors.length;
-        const array = [];
-        for (let i = 1; i < legendColors.length; i++) {
-          array.push(d3.min(tempArray + i * step));
-        }
-        return array;
-      })
+      .domain(thresholdArray)
       .range(legendColors);
+
     const legendXScale = d3
       .scaleLinear()
       .domain([d3.min(tempArray), d3.max(tempArray)])
@@ -116,17 +118,13 @@ fetch(url)
 
     const legendAxis = d3
       .axisBottom(legendXScale)
-      .tickValues(legendScale.domain())
+      .tickValues(thresholdArray)
       .tickFormat(d3.format(".2f"));
 
-    svgContainer
+    const legend = svgContainer
       .append("g")
-      .attr("id", "legendAxis")
-      .attr(
-        "transform",
-        "translate(" + paddingLeft + "," + (height - paddingLeft) + ")"
-      )
-      .call(legendAxis);
+      .attr("id", "legend")
+      .attr("transform", "translate(" + paddingLeft + "," + 550 + ")");
 
     svgContainer
       .selectAll("rect")
@@ -141,4 +139,24 @@ fetch(url)
       .attr("y", (d, i) => yScale(d.month))
       .attr("width", 5)
       .attr("height", 30);
+
+    legend
+      .append("g")
+      .selectAll("rect")
+      .data([d3.min(tempArray), ...thresholdArray])
+      .enter()
+      .append("rect")
+      .attr("x", (d, i) => {
+        return legendXScale(d);
+      })
+      .attr("data-set", (d, i) => d)
+      .attr("y", -35)
+      .attr("width", (d) => legendXScale(d + step) - legendXScale(d))
+      .attr("height", 35)
+      .style("fill", (d, i) => {
+        return "var(" + legendColors[i] + ")";
+      })
+      .style("stroke", "black");
+
+    legend.append("g").attr("id", "legendAxis").call(legendAxis);
   });
