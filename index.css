@@ -20,7 +20,7 @@ svg {
 }
 
 .container {
-  height: 550px;
+  height: 800px;
   width: 2050px;
   background: lightGrey;
   display: flex;
@@ -29,7 +29,7 @@ svg {
   justify-content: center;
 }
 
-.title {
+.heading {
   text-align: left;
   width: 1840px;
 }

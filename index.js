@@ -2,8 +2,9 @@ const url =
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json";
 
 const width = 2000,
-  height = 500,
-  padding = 80;
+  height = 600,
+  paddingLeft = 80,
+  paddingBottom = 150;
 
 const svgContainer = d3
   .select(".visHolder")
@@ -24,28 +25,39 @@ svgContainer
   .append("text")
   .text("Year")
   .attr("x", 300)
-  .attr("y", height - padding / 4)
+  .attr("y", height - 110)
   .attr("class", "axisTitle")
   .attr("id", "xAxisTitle");
 
 fetch(url)
   .then((response) => response.json())
   .then((dataset) => {
+    d3.select(document.getElementById("description"))
+      .append("text")
+      .html(
+        dataset.monthlyVariance[0].year +
+          "-" +
+          dataset.monthlyVariance[dataset.monthlyVariance.length - 1].year +
+          " (base temperature " +
+          dataset.baseTemperature +
+          "&#8451;)"
+      );
+
     const yScale = d3
       .scaleBand()
-      .domain(dataset.monthlyVariance.map((d) => d.month - 1))
-      .range([height - padding, 0]);
+      .domain(dataset.monthlyVariance.map((d) => d.month))
+      .range([height - paddingBottom, 0]);
 
     const xScale = d3
       .scaleBand()
       .domain(dataset.monthlyVariance.map((d) => d.year))
-      .range([0, width - padding]);
+      .range([0, width - paddingLeft]);
 
     const yAxis = d3
       .axisLeft(yScale)
       .tickValues(yScale.domain())
       .tickFormat((d) => {
-        date = new Date(0, d);
+        date = new Date(0, d - 1);
         return d3.timeFormat("%B")(date);
       });
 
@@ -60,7 +72,7 @@ fetch(url)
     svgContainer
       .append("g")
       .attr("id", "y-axis")
-      .attr("transform", "translate(" + padding + ", 0)")
+      .attr("transform", "translate(" + paddingLeft + ", 0)")
       .call(yAxis);
 
     svgContainer
@@ -68,15 +80,33 @@ fetch(url)
       .attr("id", "x-axis")
       .attr(
         "transform",
-        "translate(" + padding + ", " + (height - padding) + ")"
+        "translate(" + paddingLeft + ", " + (height - paddingBottom) + ")"
       )
       .call(xAxis);
 
-    //const varianceMin = dataset.monthlyVariance.variance;
-    //const varianceMax = dataset.monthlyVariance.map((d) => d3.max(d.variance));
-    // const varianceNet = varianceMax.map((d, i) => d - varianceMin[i]);
+    const varianceArray = dataset.monthlyVariance.map((d) => d.variance);
+    const tempArray = varianceArray.map((d, i) => d + dataset.baseTemperature);
 
-    console.log(dataset);
+    const legendScale = d3
+      .scaleLinear()
+      .domain(() => {
+        const step =
+          d3.max(tempArray) - d3.min(tempArray) / legendColors.length;
+      })
+      .range(legendColors);
+
+    const legendAxis = d3
+      .axisBottom(legendScale)
+      .tickFormat((d) => d3.format(".2f")(d));
+
+    svgContainer
+      .append("g")
+      .attr("id", "legendAxis")
+      .attr(
+        "transform",
+        "translate(" + paddingLeft + "," + (height - paddingLeft) + ")"
+      )
+      .call(legendAxis);
 
     svgContainer
       .selectAll("rect")
@@ -84,11 +114,11 @@ fetch(url)
       .enter()
       .append("rect")
       .attr("class", "cell")
-      .attr("data-month", (d) => d.month)
+      .attr("data-month", (d) => d.month - 1)
       .attr("data-year", (d) => d.year)
       .attr("data-temp", (d) => dataset.baseTemperature + d.variance)
-      .attr("x", (d, i) => xScale(d.year) + padding)
-      .attr("y", (d, i) => yScale(d.month - 1))
+      .attr("x", (d, i) => xScale(d.year) + paddingLeft)
+      .attr("y", (d, i) => yScale(d.month))
       .attr("width", 5)
       .attr("height", 30);
   });
