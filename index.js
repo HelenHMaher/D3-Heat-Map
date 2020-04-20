@@ -24,7 +24,7 @@ svgContainer
   .append("text")
   .text("Year")
   .attr("x", 300)
-  .attr("y", height - padding)
+  .attr("y", height - padding / 4)
   .attr("class", "axisTitle")
   .attr("id", "xAxisTitle");
 
@@ -33,23 +33,29 @@ fetch(url)
   .then((dataset) => {
     const yScale = d3
       .scaleBand()
-      .domain(
-        dataset.monthlyVariance.map((d) => {
-          return new Date(0, d.month - 1);
-        })
-      )
-      .rangeRound([height - padding, padding]);
+      .domain(dataset.monthlyVariance.map((d) => d.month))
+      .rangeRound([height - padding, 0]);
 
-    /*const xScale = d3
-      .ordinal()
-      .domain([dataset.monthlyVariance.map((d) => d.year)])
-      .range([padding, width]);*/
+    const xScale = d3
+      .scaleBand()
+      .domain(dataset.monthlyVariance.map((d) => d.year))
+      .range([0, width - padding]);
 
     const yAxis = d3
       .axisLeft(yScale)
       .tickValues(yScale.domain())
-      .tickFormat((d) => d3.timeFormat("%B")(d));
-    //const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y"));
+      .tickFormat((d) => {
+        date = new Date(0, d - 1);
+        return d3.timeFormat("%B")(date);
+      });
+
+    const xAxis = d3
+      .axisBottom(xScale)
+      .tickFormat((d) => {
+        date = new Date(d, 0);
+        return d3.timeFormat("%Y")(date);
+      })
+      .tickValues(xScale.domain().filter((x) => x % 10 === 0));
 
     svgContainer
       .append("g")
@@ -57,11 +63,20 @@ fetch(url)
       .attr("transform", "translate(" + padding + ", 0)")
       .call(yAxis);
 
-    /*svgContainer
+    svgContainer
+      .append("g")
+      .attr("id", "x-axis")
+      .attr(
+        "transform",
+        "translate(" + padding + ", " + (height - padding) + ")"
+      )
+      .call(xAxis);
+
+    svgContainer
       .selectAll("rect")
       .data(dataset.monthlyVariance)
       .enter()
       .append("rect")
-      .attr("x", (d, i) => xScale(d.Month - 1))
-      .attr("y", (d, i) => yScale(d.Year));*/
+      .attr("x", (d, i) => xScale(d))
+      .attr("y", (d, i) => yScale(d));
   });

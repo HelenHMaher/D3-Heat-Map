@@ -19,6 +19,6 @@ svg {
   background: #ffffff;
 }
 
-#y-axis {
-  background: green;
+svgContainer {
+  background: lightGrey;
 }
