@@ -19,6 +19,17 @@ svg {
   background: #ffffff;
 }
 
-svgContainer {
+.container {
+  height: 550px;
+  width: 2050px;
   background: lightGrey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  text-align: left;
+  width: 1840px;
 }

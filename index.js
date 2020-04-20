@@ -34,7 +34,7 @@ fetch(url)
     const yScale = d3
       .scaleBand()
       .domain(dataset.monthlyVariance.map((d) => d.month))
-      .rangeRound([height - padding, 0]);
+      .range([height - padding, 0]);
 
     const xScale = d3
       .scaleBand()
@@ -77,6 +77,12 @@ fetch(url)
       .data(dataset.monthlyVariance)
       .enter()
       .append("rect")
-      .attr("x", (d, i) => xScale(d))
-      .attr("y", (d, i) => yScale(d));
+      .attr("class", "cell")
+      .attr("data-month", (d) => d.month)
+      .attr("data-year", (d) => d.year)
+      .attr("data-temp", (d) => dataset.baseTemperature + d.variance)
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 5)
+      .attr("height", 30);
   });
