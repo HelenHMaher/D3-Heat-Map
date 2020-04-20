@@ -33,7 +33,7 @@ fetch(url)
   .then((dataset) => {
     const yScale = d3
       .scaleBand()
-      .domain(dataset.monthlyVariance.map((d) => d.month))
+      .domain(dataset.monthlyVariance.map((d) => d.month - 1))
       .range([height - padding, 0]);
 
     const xScale = d3
@@ -45,7 +45,7 @@ fetch(url)
       .axisLeft(yScale)
       .tickValues(yScale.domain())
       .tickFormat((d) => {
-        date = new Date(0, d - 1);
+        date = new Date(0, d);
         return d3.timeFormat("%B")(date);
       });
 
@@ -72,6 +72,12 @@ fetch(url)
       )
       .call(xAxis);
 
+    //const varianceMin = dataset.monthlyVariance.variance;
+    //const varianceMax = dataset.monthlyVariance.map((d) => d3.max(d.variance));
+    // const varianceNet = varianceMax.map((d, i) => d - varianceMin[i]);
+
+    console.log(dataset);
+
     svgContainer
       .selectAll("rect")
       .data(dataset.monthlyVariance)
@@ -81,8 +87,8 @@ fetch(url)
       .attr("data-month", (d) => d.month)
       .attr("data-year", (d) => d.year)
       .attr("data-temp", (d) => dataset.baseTemperature + d.variance)
-      .attr("x", 0)
-      .attr("y", 0)
+      .attr("x", (d, i) => xScale(d.year) + padding)
+      .attr("y", (d, i) => yScale(d.month - 1))
       .attr("width", 5)
       .attr("height", 30);
   });
