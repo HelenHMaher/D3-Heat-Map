@@ -138,7 +138,12 @@ fetch(url)
       .attr("x", (d, i) => xScale(d.year) + paddingLeft)
       .attr("y", (d, i) => yScale(d.month))
       .attr("width", 5)
-      .attr("height", 30);
+      .attr("height", 30)
+      .attr("fill", (d, i) => {
+        return (
+          "var(" + thresholdScale(dataset.baseTemperature + d.variance) + ")"
+        );
+      });
 
     legend
       .append("g")
