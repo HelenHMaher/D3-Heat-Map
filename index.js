@@ -12,6 +12,8 @@ const svgContainer = d3
   .attr("width", width)
   .attr("height", height);
 
+const tooltip = d3.select(".visHolder").append("div").attr("id", "tooltip");
+
 svgContainer
   .append("text")
   .text("Month")
@@ -126,7 +128,13 @@ fetch(url)
       .attr("id", "legend")
       .attr("transform", "translate(" + paddingLeft + "," + 550 + ")");
 
-    svgContainer
+    const textContent = (d) => {
+      let month = d3.timeFormat("%B")(new Date(0, d.month - 1));
+      let temp = (d.variance + dataset.baseTemperature).toFixed(2);
+      return month + " " + d.year + "<br>" + temp + "&#8451;";
+    };
+
+    const cell = svgContainer
       .selectAll("rect")
       .data(dataset.monthlyVariance)
       .enter()
@@ -152,7 +160,23 @@ fetch(url)
           "var(" + thresholdScale(dataset.baseTemperature + d.variance) + ")"
         );
       })
-      .attr("stroke", "black");
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
+      .on("mouseover", (d, i) => {
+        tooltip
+          .html(textContent(d))
+          .attr("data-year", (d) => {
+            return d.year;
+          })
+          .style("opacity", 0.7)
+          .attr("x", 100)
+          .attr("y", 50)
+          .attr("width", "150px")
+          .attr("height", "100px");
+      })
+      .on("mouseout", () => {
+        tooltip.style("opacity", 0);
+      });
 
     legend
       .append("g")

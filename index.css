@@ -34,6 +34,6 @@ svg {
   width: 1840px;
 }
 
-.legendCell {
-  background: green;
+.cell:hover {
+  opacity: 0.5;
 }
