@@ -11,27 +11,32 @@
 }
 
 html {
+  display: flex;
   font-family: "Manrope", sans-serif;
   background: grey;
 }
 
-svg {
-  background: #ffffff;
+#tooltip {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: white;
+  box-shadow: 0 0 5px;
 }
 
 .container {
-  height: 800px;
+  height: 650px;
   width: 2050px;
-  background: lightGrey;
+  background: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.heading {
-  text-align: left;
-  width: 1840px;
+.headingElem {
+  display: inline-block;
 }
 
 .cell:hover {

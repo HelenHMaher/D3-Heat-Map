@@ -12,7 +12,11 @@ const svgContainer = d3
   .attr("width", width)
   .attr("height", height);
 
-const tooltip = d3.select(".visHolder").append("div").attr("id", "tooltip");
+const tooltip = d3
+  .select(".visHolder")
+  .append("div")
+  .attr("class", "tooltip")
+  .attr("id", "tooltip");
 
 svgContainer
   .append("text")
@@ -164,15 +168,11 @@ fetch(url)
       .attr("stroke-width", 1)
       .on("mouseover", (d, i) => {
         tooltip
-          .html(textContent(d))
-          .attr("data-year", (d) => {
-            return d.year;
-          })
           .style("opacity", 0.7)
-          .attr("x", 100)
-          .attr("y", 50)
-          .attr("width", "150px")
-          .attr("height", "100px");
+          .attr("data-year", d.year)
+          .attr("x", 200)
+          .attr("y", 100)
+          .html(textContent(d));
       })
       .on("mouseout", () => {
         tooltip.style("opacity", 0);
