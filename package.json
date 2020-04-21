@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/HelenHMaher/D3-Heat-Map/issues"
   },
-  "homepage": "https://github.com/HelenHMaher/D3-Heat-Map#readme",
+  "homepage": "https://github.com/HelenHMaher/D3-Heat-Map",
   "dependencies": {
     "d3-scale": "^3.2.1"
   },
