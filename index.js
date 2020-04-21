@@ -9,6 +9,7 @@ const width = 2000,
 const svgContainer = d3
   .select(".visHolder")
   .append("svg")
+  .attr("id", "svg")
   .attr("width", width)
   .attr("height", height);
 
@@ -30,7 +31,7 @@ svgContainer
 svgContainer
   .append("text")
   .text("Year")
-  .attr("x", 300)
+  .attr("x", 450)
   .attr("y", height - 110)
   .attr("class", "axisTitle")
   .attr("id", "xAxisTitle");
@@ -169,9 +170,9 @@ fetch(url)
       .on("mouseover", (d, i) => {
         tooltip
           .style("opacity", 0.7)
+          .style("top", yScale(d.month) - 10 + "px")
+          .style("left", xScale(d.year) + 40 + "px")
           .attr("data-year", d.year)
-          .attr("x", 200)
-          .attr("y", 100)
           .html(textContent(d));
       })
       .on("mouseout", () => {

@@ -13,32 +13,45 @@
 html {
   display: flex;
   font-family: "Manrope", sans-serif;
-  background: grey;
+  background: white;
 }
 
 #tooltip {
   position: absolute;
-  display: flex;
-  flex-direction: column;
   text-align: center;
+  padding: 5px;
   background: white;
   box-shadow: 0 0 5px;
+  opacity: 0;
 }
 
 .container {
   height: 650px;
-  width: 2050px;
+  width: 2100px;
   background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+}
+
+.heading {
+  width: 2000px;
 }
 
 .headingElem {
   display: inline-block;
+  margin-bottom: 0px;
+}
+
+#title {
+  margin-left: 80px;
 }
 
 .cell:hover {
   opacity: 0.5;
+}
+
+footer {
+  position: absolute;
+  font-size: 10px;
+  left: 600px;
+  top: 610px;
 }
