@@ -137,13 +137,22 @@ fetch(url)
       .attr("data-temp", (d) => dataset.baseTemperature + d.variance)
       .attr("x", (d, i) => xScale(d.year) + paddingLeft)
       .attr("y", (d, i) => yScale(d.month))
-      .attr("width", 5)
-      .attr("height", 30)
+      .attr(
+        "width",
+        xScale(dataset.monthlyVariance[0].year + 1) -
+          xScale(dataset.monthlyVariance[0].year)
+      )
+      .attr(
+        "height",
+        yScale(dataset.monthlyVariance[0].month) -
+          yScale(dataset.monthlyVariance[1].month)
+      )
       .attr("fill", (d, i) => {
         return (
           "var(" + thresholdScale(dataset.baseTemperature + d.variance) + ")"
         );
-      });
+      })
+      .attr("stroke", "black");
 
     legend
       .append("g")
