@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/HelenHMaher/D3-Heat-Map",
   "dependencies": {
-    "d3-scale": "^3.2.1"
+    "d3-scale": "^4.0.2"
   },
   "devDependencies": {
     "webpack": "^4.42.1",
